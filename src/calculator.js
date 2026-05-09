@@ -64,6 +64,34 @@ try {
       }
       break;
 
+    case 'mod':
+      if (nums.length !== 2) usage('mod requires exactly two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      try {
+        result = modulo(nums[0], nums[1]);
+      } catch (e) {
+        console.error('Error:', e.message);
+        process.exit(2);
+      }
+      break;
+
+    case 'pow':
+      if (nums.length !== 2) usage('pow requires exactly two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      result = power(nums[0], nums[1]);
+      break;
+
+    case 'sqrt':
+      if (nums.length !== 1) usage('sqrt requires exactly one numeric argument');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      try {
+        result = squareRoot(nums[0]);
+      } catch (e) {
+        console.error('Error:', e.message);
+        process.exit(2);
+      }
+      break;
+
     default:
       usage(`Unknown operation: ${op}`);
   }
