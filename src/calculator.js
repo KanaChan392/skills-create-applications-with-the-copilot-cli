@@ -1,18 +1,14 @@
 #!/usr/bin/env node
 
 // Node.js CLI Calculator
-// Supported operations:
+// Supported operations (delegated to calculator-core):
 // - add  : addition (supports 2 or more operands)
 // - sub  : subtraction (requires exactly 2 operands)
 // - mul  : multiplication (supports 2 or more operands)
 // - div  : division (requires exactly 2 operands, checks division-by-zero)
 
-// Usage examples:
-//   node src/calculator.js add 1 2 3   # 6
-//   node src/calculator.js sub 5 3     # 2
-//   node src/calculator.js mul 4 2     # 8
-//   node src/calculator.js div 10 2    # 5
-
+#!/usr/bin/env node
+const { add, sub, mul, div } = require('./calculator-core');
 const [, , op, ...rawArgs] = process.argv;
 
 function usage(errMsg) {
@@ -31,43 +27,49 @@ const nums = rawArgs.map((s) => {
   return Number.isNaN(n) ? NaN : n;
 });
 
-// Validation helpers
+// Validation helper
 function anyNaN(arr) {
   return arr.some((n) => Number.isNaN(n));
 }
 
 let result;
-switch (op) {
-  case 'add':
-    if (nums.length < 2) usage('add requires at least two numeric arguments');
-    if (anyNaN(nums)) usage('Non-numeric input provided');
-    result = nums.reduce((a, b) => a + b, 0);
-    break;
+try {
+  switch (op) {
+    case 'add':
+      if (nums.length < 2) usage('add requires at least two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      result = add(...nums);
+      break;
 
-  case 'mul':
-    if (nums.length < 2) usage('mul requires at least two numeric arguments');
-    if (anyNaN(nums)) usage('Non-numeric input provided');
-    result = nums.reduce((a, b) => a * b, 1);
-    break;
+    case 'mul':
+      if (nums.length < 2) usage('mul requires at least two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      result = mul(...nums);
+      break;
 
-  case 'sub':
-    if (nums.length !== 2) usage('sub requires exactly two numeric arguments');
-    if (anyNaN(nums)) usage('Non-numeric input provided');
-    result = nums[0] - nums[1];
-    break;
+    case 'sub':
+      if (nums.length !== 2) usage('sub requires exactly two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      result = sub(nums[0], nums[1]);
+      break;
 
-  case 'div':
-    if (nums.length !== 2) usage('div requires exactly two numeric arguments');
-    if (anyNaN(nums)) usage('Non-numeric input provided');
-    if (nums[1] === 0) {
-      console.error('Error: Division by zero');
-      process.exit(2);
-    }
-    result = nums[0] / nums[1];
-    break;
+    case 'div':
+      if (nums.length !== 2) usage('div requires exactly two numeric arguments');
+      if (anyNaN(nums)) usage('Non-numeric input provided');
+      try {
+        result = div(nums[0], nums[1]);
+      } catch (e) {
+        console.error('Error:', e.message);
+        process.exit(2);
+      }
+      break;
 
-  default:
-    usage(`Unknown operation: ${op}`);
+    default:
+      usage(`Unknown operation: ${op}`);
+  }
+} catch (e) {
+  console.error('Error:', e.message || e);
+  process.exit(1);
 }
 
 // Print result
