@@ -29,14 +29,14 @@ function mul(...nums) {
 }
 
 function sub(a, b) {
-  validateNumbers([a, b]);
   if (arguments.length !== 2) throw new Error('sub requires exactly two numeric arguments');
+  validateNumbers([a, b]);
   return a - b;
 }
 
 function div(a, b) {
-  validateNumbers([a, b]);
   if (arguments.length !== 2) throw new Error('div requires exactly two numeric arguments');
+  validateNumbers([a, b]);
   if (b === 0) throw new Error('Division by zero');
   return a / b;
 }
