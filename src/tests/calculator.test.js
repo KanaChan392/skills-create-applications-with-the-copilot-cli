@@ -1,4 +1,4 @@
-const { add, sub, mul, div } = require('../calculator-core');
+const { add, sub, mul, div, modulo, power, squareRoot } = require('../calculator-core');
 
 describe('Calculator core', () => {
   describe('addition', () => {
@@ -46,6 +46,48 @@ describe('Calculator core', () => {
 
     test('requires exactly two args', () => {
       expect(() => div(1)).toThrow(/exactly two/);
+    });
+  });
+
+  describe('modulo', () => {
+    test('mod 10 % 3 => 1', () => {
+      expect(modulo(10, 3)).toBe(1);
+    });
+
+    test('mod by zero throws', () => {
+      expect(() => modulo(10, 0)).toThrow(/Division by zero/);
+    });
+
+    test('requires exactly two args', () => {
+      expect(() => modulo(5)).toThrow(/exactly two/);
+    });
+  });
+
+  describe('power', () => {
+    test('power 2 ^ 3 => 8', () => {
+      expect(power(2, 3)).toBe(8);
+    });
+
+    test('power with negative exponent', () => {
+      expect(power(2, -1)).toBeCloseTo(0.5);
+    });
+
+    test('requires exactly two args', () => {
+      expect(() => power(2)).toThrow(/exactly two/);
+    });
+  });
+
+  describe('squareRoot', () => {
+    test('sqrt 9 => 3', () => {
+      expect(squareRoot(9)).toBe(3);
+    });
+
+    test('sqrt negative throws', () => {
+      expect(() => squareRoot(-1)).toThrow(/negative/);
+    });
+
+    test('requires exactly one arg', () => {
+      expect(() => squareRoot()).toThrow(/exactly one/);
     });
   });
 });
